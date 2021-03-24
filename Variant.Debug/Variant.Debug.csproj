@@ -9,4 +9,9 @@
     <ProjectReference Include="..\Variant.Generator\Variant.Generator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="3.6.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+  </ItemGroup>
+
 </Project>

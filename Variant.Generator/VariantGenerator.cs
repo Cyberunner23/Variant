@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Text;
 
 using Microsoft.CodeAnalysis;
@@ -7,10 +9,6 @@ namespace Variant.Generator
     [Generator]
     public class VariantGenerator : ISourceGenerator
     {
-        
-
-
-
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
@@ -18,11 +16,16 @@ namespace Variant.Generator
 
         public void Execute(GeneratorExecutionContext context)
         {
-            context.AddSource(VariantTemplateData.GeneratedVariantAttributeHintName, VariantTemplateData.GeneratedVariantAttributeText);
+            context.AddSource(VariantTemplate.GeneratedVariantAttributeHintName, VariantTemplate.GeneratedVariantAttributeText);
 
             if (!(context.SyntaxReceiver is SyntaxReceiver receiver)) { return; }
 
-            var builder = new StringBuilder();
+            if (!Debugger.IsAttached)
+            {
+                Debugger.Launch();
+            }
+            
+            Debug.WriteLine("OUTPUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUT");
         }
     }
 }

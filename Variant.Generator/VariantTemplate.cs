@@ -1,133 +1,81 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Variant.Generator
 {
-    // TODO(AFL): Cleanup
     internal sealed class VariantTemplate
     {
-        private string Namespace { get; }
-        private string AccessModifier { get; }
-        private string ClassName { get; }
-        private IEnumerable<string> GenericArgumentNames { get; }
+        private const string TResult        = "TResult";
+        private const string FuncPrefix     = "func_";
+        private const string ActionPrefix   = "action_";
+        private const string SubclassPrefix = "Type_";
 
-        public VariantTemplate(string @namespace, string accessModifier, string className, IEnumerable<string> genericArgumentNames)
-        {
-            Namespace = @namespace;
-            AccessModifier = accessModifier;
-            ClassName = className;
-            GenericArgumentNames = genericArgumentNames;
-        }
-
-        public string GenerateVariantImplementation()
-        {
-            var sb = new StringBuilder(VariantTemplateData.GeneratedVariantText);
-
-            var baseReplacementTable = new Dictionary<string, string>()
+        public const string GeneratedVariantAttributeHintName = "GeneratedVariantAttribute";
+        public const string GeneratedVariantAttributeText = @"
+            using System;
+            namespace Variant
             {
-                { VariantTemplateData.NamespaceTag, Namespace },
-                { VariantTemplateData.AccessibilityModifierTag, AccessModifier },
-                { VariantTemplateData.ClassNameTag, ClassName },
-            };
+                [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+                public class GeneratedVariantAttribute : Attribute { }
+            }";
+        
+        public static string GenerateVariantImplementation(string @namespace, string accessModifier, string className, IEnumerable<string> genericArguments)
+        {
+            StringBuilder sb = new StringBuilder();
 
-            var classGenericArguments = GenerateClassGenericArguments();
-            var matchResultMethodArguments = GenerateMatchResultMethodArguments();
-            var matchVoidMethodArguments = GenerateMatchVoidMethodArguments();
-            var implicitOperators = GenerateImplicitOperators();
-            var replacementTable = new Dictionary<string, string>(baseReplacementTable)
+            string tab = "    ";
+            string genericArgumentsText = string.Join(", ", genericArguments);
+            string matchResultSignature = GenerateMatchResultSignature(genericArguments);
+            string matchVoidSignature = GenerateMatchVoidSignature(genericArguments);
+
+            sb.AppendLine($"namespace {@namespace}");
+            sb.AppendLine($"{{");
+            sb.AppendLine($"{tab}public abstract class {className}<{genericArgumentsText}>");
+            sb.AppendLine($"{tab}{{");
+            sb.AppendLine($"{tab}{tab}private {className}() {{ }}");
+            sb.AppendLine($"{tab}{tab}public abstract {matchResultSignature};");
+            sb.AppendLine($"{tab}{tab}public abstract {matchVoidSignature};");
+
+            foreach (var genericArgument in genericArguments)
             {
-                { VariantTemplateData.ClassGenericArgumentsTag, classGenericArguments },
-                { VariantTemplateData.MatchResultMethodArgumentsTag, matchResultMethodArguments},
-                { VariantTemplateData.MatchVoidMethodArgumentsTag, matchVoidMethodArguments},
-                { VariantTemplateData.ImplicitOperatorsTag, implicitOperators}
-            };
-
-            sb.ReplaceMultiple(replacementTable);
-
-            return sb.ToString();
-        }
-
-        private string GenerateClassGenericArguments()
-        {
-            var genericArguments = string.Join(", ", GenericArgumentNames);
-            return genericArguments;
-        }
-
-        private string GenerateMatchResultMethodArguments()
-        {
-            var methodArguments = GenericArgumentNames.Select(x => GenerateMatchResultMethodArgument(x));
-            var methodArgumentsText = string.Join(", ", methodArguments);
-            return methodArgumentsText;
-        }
-
-        private string GenerateMatchResultMethodArgument(string genericArgumentName)
-        { 
-            var argumentText = VariantTemplateData.MatchSingleResultArgumentText;
-            var variablePrefix = VariantTemplateData.MatchSingleResultArgumentVariablePrefix;
-            var classSingleGenericArgumentTag = VariantTemplateData.ClassSingleGenericArgumentTag;
-            var matchSingleResultArgumentVariableTag = VariantTemplateData.MatchSingleResultArgumentVariableTag;
-
-            var matchSingleResultArgumentVariable = $"{variablePrefix}{genericArgumentName}";
-            argumentText = argumentText.Replace(classSingleGenericArgumentTag, genericArgumentName);
-            argumentText = argumentText.Replace(matchSingleResultArgumentVariableTag, matchSingleResultArgumentVariable);
-
-            return argumentText;
-        }
-
-        private string GenerateMatchVoidMethodArguments()
-        {
-            var methodArguments = GenericArgumentNames.Select(x => GenerateMatchVoidMethodArgument(x));
-            var methodArgumentsText = string.Join(", ", methodArguments);
-            return methodArgumentsText;
-        }
-
-        private string GenerateMatchVoidMethodArgument(string genericArgumentName)
-        {
-            var argumentText = VariantTemplateData.MatchSingleVoidArgumentText;
-            var variablePrefix = VariantTemplateData.MatchSingleVoidArgumentVariablePrefix;
-            var classSingleGenericArgumentTag = VariantTemplateData.ClassSingleGenericArgumentTag;
-            var matchSingleVoidArgumentVariableTag = VariantTemplateData.MatchSingleVoidArgumentVariableTag;
-
-            var matchSingleVoidArgumentVariable = $"{variablePrefix}{genericArgumentName}";
-            argumentText = argumentText.Replace(classSingleGenericArgumentTag, genericArgumentName);
-            argumentText = argumentText.Replace(matchSingleVoidArgumentVariableTag, matchSingleVoidArgumentVariable);
-
-            return argumentText;
-        }
-
-        private string GenerateVariantSubclassName(string genericArgumentName)
-        {
-            var prefix = VariantTemplateData.VariantSubclassNamePrefix;
-            return $"{prefix}{genericArgumentName}";
-        }
-
-        private string GenerateImplicitOperators()
-        {
-            var sb = new StringBuilder();
-
-            var classGenericArguments = GenerateClassGenericArguments();
-            var replacementTable = new Dictionary<string, string>()
-            {
-                { VariantTemplateData.ClassNameTag, ClassName },
-                { VariantTemplateData.ClassGenericArgumentsTag, classGenericArguments },
-            };
-
-            var classSingleGenericArgumentTag = VariantTemplateData.ClassSingleGenericArgumentTag;
-            var variantSubclassNameTag = VariantTemplateData.VariantSubclassNameTag;
-
-            foreach (var genericArgumentName in GenericArgumentNames)
-            {
-                replacementTable[classSingleGenericArgumentTag] = genericArgumentName;
-                replacementTable[variantSubclassNameTag] = GenerateVariantSubclassName(genericArgumentName);
-
-                var implicitOperatorText = VariantTemplateData.ImplicitOperatorText;
-                sb.AppendLine(implicitOperatorText);
-                sb.ReplaceMultiple(replacementTable);
+                sb.AppendLine($"{tab}{tab}public static implicit operator {className}<{genericArgumentsText}>({genericArgument} value) => new {SubclassPrefix}{genericArgument}(value);");
             }
+            
+            sb.AppendLine();
+
+            foreach (var genericArgument in genericArguments)
+            {
+                var subclassName = $"{SubclassPrefix}{genericArgument}";
+                sb.AppendLine($"{tab}{tab}public sealed class {subclassName} : {className}<{genericArgumentsText}>");
+                sb.AppendLine($"{tab}{tab}{{");
+                sb.AppendLine($"{tab}{tab}{tab}private readonly {genericArgument} _value;");
+                sb.AppendLine($"{tab}{tab}{tab}public {subclassName}({genericArgument} value) {{ _value = value; }}");
+                sb.AppendLine($"{tab}{tab}{tab}public override {matchResultSignature} {{ return {FuncPrefix}{genericArgument}(_value); }}");
+                sb.AppendLine($"{tab}{tab}{tab}public override {matchVoidSignature} {{ {ActionPrefix}{genericArgument}(_value); }}");
+                sb.AppendLine($"{tab}{tab}}}");
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine($"{tab}}}");
+            sb.AppendLine($"}}");
 
             return sb.ToString();
+        }
+
+        private static string GenerateMatchResultSignature(IEnumerable<string> genericArguments)
+        {
+            IEnumerable<string> arguments = genericArguments.Select(x => $"Func<{x}, {TResult}> {FuncPrefix}{x}");
+            string argumentsText = string.Join(", ", arguments);
+            return $"{TResult} Match<{TResult}>({argumentsText})";
+        }
+        
+        private static string GenerateMatchVoidSignature(IEnumerable<string> genericArguments)
+        {
+            IEnumerable<string> arguments = genericArguments.Select(x => $"Action<{x}> {ActionPrefix}{x}");
+            string argumentsText = string.Join(", ", arguments);
+            return $"void Match({argumentsText})";
         }
     }
 }
-
