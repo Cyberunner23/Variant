@@ -1,9 +1,0 @@
-{
-    "profiles": {
-        "DebugRolsynComponent": {
-            "commandName": "Executable",
-            "executablePath": "dotnet-kittitas",
-            "commandLineArgs": "/home/cyberunner23/Dev/Variant/Variant/Variant.csproj"
-        }
-    }
-}
