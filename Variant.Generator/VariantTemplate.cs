@@ -12,14 +12,15 @@ namespace Variant.Generator
         private const string ActionPrefix   = "action_";
         private const string SubclassPrefix = "Type_";
 
-        public const string GeneratedVariantAttributeHintName = "GeneratedVariantAttribute";
-        public const string GeneratedVariantAttributeText = @"
+        public const string GeneratedVariantAttributeNamespace = "Variant";
+        public const string GeneratedVariantAttributeName = "GeneratedVariantAttribute";
+        public static readonly string GeneratedVariantAttributeText = $@"
             using System;
-            namespace Variant
-            {
+            namespace {GeneratedVariantAttributeNamespace}
+            {{
                 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-                public class GeneratedVariantAttribute : Attribute { }
-            }";
+                public class {GeneratedVariantAttributeName} : Attribute {{ }}
+            }}";
         
         public static string GenerateVariantImplementation(string @namespace, string accessModifier, string className, IEnumerable<string> genericArguments)
         {

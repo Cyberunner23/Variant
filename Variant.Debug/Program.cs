@@ -31,9 +31,9 @@ namespace Variant.Debug
 
 
 
-/*
 
-namespace SourceGeneratorSamples
+
+/*namespace SourceGeneratorSamples
 {
     [Generator]
     public class AutoNotifyGenerator : ISourceGenerator
