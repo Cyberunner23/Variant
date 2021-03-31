@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -22,7 +21,7 @@ namespace Variant.Generator
                 public class {GeneratedVariantAttributeName} : Attribute {{ }}
             }}";
         
-        public static string GenerateVariantImplementation(string @namespace, string accessModifier, string className, IEnumerable<string> genericArguments)
+        public static string GenerateVariantImplementation(string @namespace, string accessModifiers, string className, IEnumerable<string> genericArguments)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -33,7 +32,8 @@ namespace Variant.Generator
 
             sb.AppendLine($"namespace {@namespace}");
             sb.AppendLine($"{{");
-            sb.AppendLine($"{tab}public abstract class {className}<{genericArgumentsText}>");
+            sb.AppendLine($"{tab}using System;");
+            sb.AppendLine($"{tab}public abstract partial class {className}<{genericArgumentsText}>");
             sb.AppendLine($"{tab}{{");
             sb.AppendLine($"{tab}{tab}private {className}() {{ }}");
             sb.AppendLine($"{tab}{tab}public abstract {matchResultSignature};");

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Variant.Generator\Variant.Generator.csproj" />
+    <ProjectReference Include="..\Variant\Variant.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Variant.Generator
 {
-    class SyntaxReceiver : ISyntaxReceiver
+    internal class SyntaxReceiver : ISyntaxReceiver
     {
         public IList<ClassDeclarationSyntax> CandidateClasses { get; } = new List<ClassDeclarationSyntax>();
 
