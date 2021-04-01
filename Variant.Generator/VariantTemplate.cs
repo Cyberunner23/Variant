@@ -33,7 +33,7 @@ namespace Variant.Generator
             sb.AppendLine($"namespace {@namespace}");
             sb.AppendLine($"{{");
             sb.AppendLine($"{tab}using System;");
-            sb.AppendLine($"{tab}public abstract partial class {className}<{genericArgumentsText}>");
+            sb.AppendLine($"{tab}{accessModifiers} abstract partial class {className}<{genericArgumentsText}>");
             sb.AppendLine($"{tab}{{");
             sb.AppendLine($"{tab}{tab}private {className}() {{ }}");
             sb.AppendLine($"{tab}{tab}public abstract {matchResultSignature};");
