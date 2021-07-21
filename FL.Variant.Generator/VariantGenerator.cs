@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Variant.Generator
+namespace FL.Variant.Generator
 {
     [Generator]
     public class VariantGenerator : ISourceGenerator
@@ -52,6 +52,9 @@ namespace Variant.Generator
 
                 string generatedVariant = VariantTemplate.GenerateVariantImplementation(@namespace, accessibilityModifiersText, name, genericArgumentNames);
                 context.AddSource($"{@namespace}_{name}_{string.Join("_", genericArgumentNames)}", generatedVariant);
+
+                string generatedVariantConverter = VariantConverterTemplate.GenerateVariantConverterImplementation(@namespace, name, genericArgumentNames);
+                context.AddSource($"{@namespace}_{name}_Converter_{string.Join("_", genericArgumentNames)}", generatedVariantConverter);
             }
         }
 

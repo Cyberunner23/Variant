@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Variant.Generator
+namespace FL.Variant.Generator
 {
     internal class SyntaxReceiver : ISyntaxReceiver
     {

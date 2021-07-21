@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Variant.Generator
+namespace FL.Variant.Generator
 {
     internal class VariantConverterTemplate
     {
@@ -82,7 +82,7 @@ namespace Variant.Generator
             sb.AppendLine($"{Tab}{Tab}{Tab}{{");
             sb.AppendLine($"{Tab}{Tab}{Tab}{Tab}value.Match(");
 
-            var matchArguments = genericArguements.Select(x => $"{Tab}{Tab}{Tab}{Tab}(val) => {{ JsonSerializer.Serialize(writer, val, options); }}");
+            var matchArguments = genericArguements.Select(x => $"{Tab}{Tab}{Tab}{Tab}{Tab}(val) => {{ JsonSerializer.Serialize(writer, val, options); }}");
             sb.Append(string.Join(",\n", matchArguments));
             sb.AppendLine($"\n{Tab}{Tab}{Tab}{Tab});");
             sb.AppendLine($"{Tab}{Tab}{Tab}}}");

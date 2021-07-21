@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Variant.Generator
+namespace FL.Variant.Generator
 {
     internal sealed class VariantTemplate
     {
@@ -30,9 +30,14 @@ namespace Variant.Generator
             string matchResultSignature = GenerateMatchResultSignature(genericArguments);
             string matchVoidSignature = GenerateMatchVoidSignature(genericArguments);
 
+            string converterClassName = VariantConverterTemplate.GenerateVariantConverterClassName(className, genericArguments);
+
             sb.AppendLine($"namespace {@namespace}");
             sb.AppendLine($"{{");
             sb.AppendLine($"{tab}using System;");
+            sb.AppendLine($"{tab}using System.Text.Json.Serialization;");
+            sb.AppendLine();
+            sb.AppendLine($"{tab}[JsonConverter(typeof({converterClassName}))]");
             sb.AppendLine($"{tab}{accessModifiers} abstract partial class {className}<{genericArgumentsText}>");
             sb.AppendLine($"{tab}{{");
             sb.AppendLine($"{tab}{tab}private {className}() {{ }}");

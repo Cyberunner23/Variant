@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Variant.Generator
+namespace FL.Variant.Generator
 {
     internal static class Diagnostics
     {
