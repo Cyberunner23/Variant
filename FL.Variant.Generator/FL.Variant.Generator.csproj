@@ -7,7 +7,7 @@
     <Company>Alex Frappier Lachapelle</Company>
     <Copyright>© 2021 Alex Frappier Lachapelle</Copyright>
     <Description>A .NET implementation of a Discriminated Union</Description>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.4</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <PackageTags>codegen code-generator</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,4 +20,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
 </Project>

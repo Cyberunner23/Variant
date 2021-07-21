@@ -11,7 +11,7 @@ namespace FL.Variant.Generator
         private const string ActionPrefix   = "action_";
         private const string SubclassPrefix = "Type_";
 
-        public const string GeneratedVariantAttributeNamespace = "Variant";
+        public const string GeneratedVariantAttributeNamespace = "FL.Variant";
         public const string GeneratedVariantAttributeName = "GeneratedVariantAttribute";
         public static readonly string GeneratedVariantAttributeText = $@"
             using System;

@@ -2,26 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-
-    <PackageId>Variant</PackageId>
-    <Version>1.0.0</Version>
+    <PackageId>FL.Variant</PackageId>
+    <Product>FL.Variant</Product>
     <Authors>Alex Frappier Lachapelle</Authors>
-    <Description>An implementation for a Descriminating Union.</Description>
-    <PackageProjectUrl> https://github.com/Cyberunner23/Variant </PackageProjectUrl>
-
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <Company>Alex Frappier Lachapelle</Company>
+    <Copyright>© 2021 Alex Frappier Lachapelle</Copyright>
+    <Description>A .NET implementation of a Discriminated Union</Description>
+    <VersionPrefix>1.0.4</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <PackageTags>codegen code-generator</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Cyberunner23/Variant</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cyberunner23/Variant</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.10.0" />
+  <ItemGroup>    
+    <PackageReference Include="FL.Variant.Generator" Version="1.0.4" />    
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
-
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-    </ItemGroup>
-  </Target>
 
 </Project>
